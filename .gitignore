@@ -1,0 +1,31 @@
+# Fichiers et dossiers à ignorer par Git
+
+# Environnement virtuel Python
+venv/
+
+# Base de données locale (sera recréée sur le serveur)
+*.db
+*.db-shm
+*.db-wal
+
+# Dossier musique (les fichiers MP3 ne vont pas sur GitHub)
+music/
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Fichiers de config OS
+.DS_Store
+Thumbs.db
+
+# Fichiers de test temporaires
+test_audio.*
+
+# Clés SSH et secrets
+*.key
+*.pem
+
+# Logs
+*.log
