@@ -21,6 +21,10 @@ const state = {
 // ── Audio Element ─────────────────────────────────────
 const audio = new Audio();
 audio.preload = 'metadata';
+audio.setAttribute('playsinline', '');
+audio.setAttribute('webkit-playsinline', '');
+audio.style.display = 'none';
+document.body.appendChild(audio);
 
 // ── DOM refs ──────────────────────────────────────────
 const dom = {

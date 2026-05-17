@@ -1,98 +1,83 @@
 # KMusic
 
-Application de streaming musical personnel, hébergée sur Oracle Cloud. Inspirée des grandes applications comme **Spotify** et **Apple Music**, elle permet d'écouter ta bibliothèque musicale depuis n'importe où dans le monde, sur téléphone ou PC.
+Application de streaming musical personnel, auto-hebergee. Inspirée des grandes applications comme Spotify et Apple Music, elle permet d'ecouter ta bibliotheque musicale depuis n'importe ou dans le monde, sur telephone ou PC.
 
-##  Fonctionnalités
+## Fonctionnalites
 
--  **Lecteur audio complet** — Lecture, pause, suivant, précédent, répétition, lecture aléatoire
--  **Interface mobile native** — Mini-lecteur compact + plein écran immersif (style Apple Music)
--  **Gestes tactiles** — Swipe vers le bas pour fermer, swipe gauche/droite pour zapper
--  **Pochettes automatiques** — Récupération des vraies pochettes via FFmpeg lors du téléchargement YouTube
--  **Téléchargement YouTube** — Colle une URL YouTube et télécharge directement en MP3 HD
--  **Upload de fichiers** — Importe tes propres fichiers audio (MP3, FLAC, OGG, AAC, M4A, WAV)
--  **Recherche en temps réel** — Filtre par titre, artiste ou album
--  **Sélection multiple** — Supprime plusieurs pistes en même temps
--  **Temps réel** — Mises à jour instantanées via WebSocket (SocketIO)
--  **Design sombre premium** — Interface glassmorphism avec animations fluides
+- Lecteur audio complet : Lecture, pause, suivant, precedent, repetition, lecture aleatoire
+- Interface mobile native : Mini-lecteur compact + plein ecran immersif (style Apple Music)
+- Gestes tactiles : Swipe vers le bas pour fermer, swipe gauche/droite pour zapper
+- Pochettes automatiques : Recuperation des vraies pochettes via FFmpeg lors du telechargement YouTube
+- Telechargement YouTube : Colle une URL YouTube et telecharge directement en MP3 HD
+- Upload de fichiers : Importe tes propres fichiers audio (MP3, FLAC, OGG, AAC, M4A, WAV)
+- Recherche en temps reel : Filtre par titre, artiste ou album
+- Selection multiple : Supprime plusieurs pistes en meme temps
+- Temps reel : Mises a jour instantanees via WebSocket (SocketIO)
+- Design sombre premium : Interface glassmorphism avec animations fluides
 
-##  Stack Technique
+## Stack Technique
 
-| Composant | Technologie |
-|-----------|------------|
-| Backend | Python, Flask, Flask-SocketIO |
-| Base de données | SQLite (via Flask-SQLAlchemy) |
-| Frontend | HTML5, CSS3 Vanilla, JavaScript ES6+ |
-| Audio | API Web Audio + Streaming HTTP Range |
-| Téléchargement | yt-dlp |
-| Conversion | FFmpeg |
-| Surveillance dossier | Watchdog |
-| Serveur production | Gunicorn + Eventlet |
+- Backend : Python, Flask, Flask-SocketIO
+- Base de donnees : SQLite (via Flask-SQLAlchemy)
+- Frontend : HTML5, CSS3 Vanilla, JavaScript ES6+
+- Audio : API Web Audio + Streaming HTTP Range
+- Telechargement : yt-dlp
+- Conversion : FFmpeg
+- Surveillance dossier : Watchdog
+- Acces public : ngrok (tunnel HTTP securise)
 
-##  Déploiement (Oracle Cloud - Ubuntu)
+## Deploiement Local (Windows)
 
-### 1. Cloner le projet
-```bash
-git clone https://github.com/TON_COMPTE/kmusic.git
-cd kmusic
-```
+L'application est configuree pour tourner localement sur un PC Windows et etre accessible depuis internet via ngrok.
 
-### 2. Installer les dépendances système
-```bash
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y python3 python3-pip python3-venv ffmpeg
-```
-
-### 3. Créer l'environnement virtuel
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-pip install eventlet
-```
-
-### 4. Lancer en production
-```bash
-chmod +x start.sh
-./start.sh
-```
-
-### 5. Accès
-Ouvre ton navigateur sur `http://TON_IP_ORACLE:5000`
-
-##  Structure du projet
-
-```
-kmusic/
-├── app.py              # Application principale Flask
-├── database.py         # Modèles SQLAlchemy (Track)
-├── scanner.py          # Scanner de dossier + extraction métadonnées
-├── requirements.txt    # Dépendances Python
-├── start.sh            # Script de démarrage Linux (production)
-├── static/
-│   ├── css/
-│   │   └── style.css   # Design complet (dark mode, animations)
-│   ├── js/
-│   │   └── app.js      # Logique frontend (player, swipes, SocketIO)
-│   ├── icons/          # Icônes PWA
-│   ├── img/            # Pochette par défaut
-│   └── manifest.json   # PWA manifest
-├── templates/
-│   └── index.html      # Template principal
-└── music/              # Dossier des fichiers audio (non versionné)
-```
-
-##  Configuration requise
-
+### 1. Pre-requis
 - Python 3.10+
-- FFmpeg installé sur le système
-- Au minimum 512 MB de RAM (recommandé 1 GB+)
+- FFmpeg (installe via winget ou ajoute au PATH)
+- Un compte ngrok avec un authtoken configure
 
-##  Notes
+### 2. Installation
+```cmd
+git clone https://github.com/kabirsib349/kmusic.git
+cd kmusic
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-- La base de données `kmusic.db` est créée automatiquement au premier démarrage
-- Le dossier `music/` est surveillé en temps réel par Watchdog
-- Les musiques téléchargées via YouTube sont converties en MP3 192kbps
-- Les pochettes sont incrustées directement dans les fichiers MP3 via FFmpeg
+### 3. Lancement du serveur
+Un script automatise est fourni. Il lance le serveur Python, ouvre un tunnel ngrok avec votre domaine fixe, et desactive temporairement la mise en veille de Windows pour eviter les coupures.
+
+Faites un clic droit sur `start_server.bat` et selectionnez "Executer en tant qu'administrateur".
+
+### 4. Acces
+L'URL publique (ngrok) s'affichera dans la console. Vous pouvez l'utiliser sur votre telephone ou n'importe quel autre appareil.
+
+## Structure du projet
+
+kmusic/
+|-- app.py              # Application principale Flask
+|-- database.py         # Modeles SQLAlchemy (Track)
+|-- scanner.py          # Scanner de dossier + extraction metadonnees
+|-- requirements.txt    # Dependances Python
+|-- start_server.bat    # Script automatise pour Windows
+|-- static/
+|   |-- css/
+|   |   `-- style.css   # Design complet (dark mode, animations)
+|   |-- js/
+|   |   `-- app.js      # Logique frontend (player, swipes, SocketIO)
+|   |-- icons/          # Icones PWA
+|   |-- img/            # Pochette par defaut
+|   `-- manifest.json   # PWA manifest
+|-- templates/
+|   `-- index.html      # Template principal
+`-- music/              # Dossier des fichiers audio (non versionne)
+
+## Notes
+
+- La base de donnees kmusic.db est creee automatiquement au premier demarrage.
+- Le dossier music/ est surveille en temps reel par Watchdog.
+- Les musiques telechargees via YouTube sont converties en MP3 192kbps.
+- Les pochettes sont incrustees directement dans les fichiers MP3 via FFmpeg.
 
 ---
-*KMusic — ton Spotify personnel, auto-hébergé.*
+KMusic - Ton Spotify personnel, auto-heberge.
