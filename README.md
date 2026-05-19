@@ -26,16 +26,16 @@ Application de streaming musical personnel, auto-hébergée. Inspirée des grand
 | Téléchargement | yt-dlp |
 | Conversion | FFmpeg |
 | Surveillance dossier | Watchdog |
-| Accès public | ngrok (tunnel HTTP sécurisé) |
+| Accès public | Cloudflare Tunnel (tunnel sécurisé ultra-rapide) |
 
 ## Déploiement Local (Windows)
 
-L'application est configurée pour tourner localement sur un PC Windows et être accessible depuis internet via un tunnel ngrok.
+L'application est configurée pour tourner localement sur un PC Windows et être accessible depuis internet via un tunnel Cloudflare.
 
 ### 1. Pré-requis
 - Python 3.10+
 - FFmpeg (installé via winget ou ajouté au PATH)
-- Un compte ngrok avec un authtoken configuré
+- Cloudflare Tunnel (installé automatiquement via winget)
 
 ### 2. Installation
 ```cmd
@@ -47,12 +47,12 @@ pip install -r requirements.txt
 ```
 
 ### 3. Lancement du serveur
-Un script automatisé est fourni. Il lance le serveur Python, ouvre un tunnel ngrok avec votre domaine fixe, et désactive temporairement la mise en veille de Windows pour éviter les coupures réseau.
+Un script automatisé est fourni. Il lance le serveur Python, ouvre un tunnel Cloudflare ultra-rapide (sans inscription), et désactive temporairement la mise en veille de Windows pour éviter les coupures réseau.
 
 Faites un clic droit sur `start_server.bat` et sélectionnez **Exécuter en tant qu'administrateur**.
 
 ### 4. Accès
-L'URL publique (ngrok) s'affichera dans la console. Vous pouvez l'utiliser sur votre téléphone ou n'importe quel autre appareil.
+L'URL publique (Cloudflare) s'affichera dans la console. Vous pouvez l'utiliser sur votre téléphone ou n'importe quel autre appareil.
 
 ## Structure du projet
 

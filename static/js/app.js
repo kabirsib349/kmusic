@@ -15,15 +15,15 @@ const state = {
   dragging: false,
   currentView: 'library',
   selectionMode: false,
-  selectedIds: new Set()
+  selectedIds: new Set(),
+  isTrackEnding: false // Hack iOS pour la lecture en arrière-plan
 };
 
 // ── Audio Element ─────────────────────────────────────
-const audio = new Audio();
-audio.preload = 'metadata';
+const audio = document.createElement('audio');
 audio.setAttribute('playsinline', '');
 audio.setAttribute('webkit-playsinline', '');
-audio.style.display = 'none';
+audio.autoplay = true; // Force la lecture automatique au changement de source (aide sur iOS en arrière-plan)
 document.body.appendChild(audio);
 
 // ── DOM refs ──────────────────────────────────────────
@@ -232,7 +232,8 @@ function playTrack(index) {
   const track = state.filtered[index];
 
   audio.src = `/api/tracks/${track.id}/stream`;
-  audio.load();
+  // Suppression de audio.load() pour éviter qu'iOS Safari ne bloque 
+  // la lecture continue en arrière-plan (coupure de la session audio).
   audio.play().catch(e => console.warn('Autoplay blocked:', e));
 
   updatePlayerUI(track);
@@ -284,6 +285,7 @@ function playPrev() {
 
 // Audio events
 audio.addEventListener('play', () => {
+  state.isTrackEnding = false; // Réinitialise le flag ici une fois que la nouvelle piste a commencé à jouer
   document.getElementById('play-icon').outerHTML =
     '<svg id="play-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 });
@@ -297,6 +299,21 @@ audio.addEventListener('timeupdate', () => {
   const pct = (audio.currentTime / audio.duration) * 100;
   dom.progressFill.style.width = pct + '%';
   dom.currentTime.textContent = formatTime(audio.currentTime);
+
+  // --- HACK IOS SAFARI ---
+  // Si on est à moins de 0.4s de la fin, on passe à la suite manuellement.
+  // Cela empêche l'audio de s'arrêter complètement et empêche iOS 
+  // de "geler" l'exécution Javascript en arrière-plan.
+  if (audio.duration - audio.currentTime < 0.4 && !state.isTrackEnding) {
+    state.isTrackEnding = true;
+    if (state.repeatMode === 'one') {
+      audio.currentTime = 0;
+      audio.play();
+      setTimeout(() => state.isTrackEnding = false, 1000);
+    } else {
+      playNext();
+    }
+  }
 });
 
 audio.addEventListener('loadedmetadata', () => {
@@ -304,11 +321,14 @@ audio.addEventListener('loadedmetadata', () => {
 });
 
 audio.addEventListener('ended', () => {
-  if (state.repeatMode === 'one') {
-    audio.currentTime = 0;
-    audio.play();
-  } else {
-    playNext();
+  // Fallback au cas où le hack timeupdate n'a pas suffi
+  if (!state.isTrackEnding) {
+    if (state.repeatMode === 'one') {
+      audio.currentTime = 0;
+      audio.play();
+    } else {
+      playNext();
+    }
   }
 });
 

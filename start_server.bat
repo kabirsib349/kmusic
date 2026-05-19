@@ -62,14 +62,14 @@ call venv\Scripts\activate.bat
 set "FFMPEG_PATH=%LOCALAPPDATA%\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1.1-full_build\bin"
 if exist "%FFMPEG_PATH%" set "PATH=%FFMPEG_PATH%;%PATH%"
 
-:: Lancer ngrok dans une nouvelle fenetre
-echo  [OK] Lancement du tunnel ngrok...
-start "KMusic - Tunnel ngrok" cmd /k "ngrok http --domain=corny-enviably-affix.ngrok-free.dev 5000"
+:: Lancer Cloudflare Tunnel dans une nouvelle fenetre
+echo  [OK] Lancement du tunnel Cloudflare (Vitesse CDN ultra-rapide et illimitee)...
+start "KMusic - Tunnel Cloudflare" cmd /k "cloudflared tunnel --protocol http2 --url http://localhost:5000"
 
 echo.
 echo  ========================================================
-echo   TON URL PERMANENTE (A METTRE DANS TON TELEPHONE) :
-echo   https://corny-enviably-affix.ngrok-free.dev
+echo   LANCE L'URL EN ".trycloudflare.com" AFFICHEE DANS LA
+echo   DEUXIEME FENETRE "KMusic - Tunnel Cloudflare" SUR TON TELEPHONE !
 echo  ========================================================
 echo.
 echo  [!] Lancement du serveur... 
